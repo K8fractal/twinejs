@@ -62,6 +62,15 @@ export function formatWithNameAndVersion(
 
 	if (result) {
 		return result;
+	} else if (version === '') {
+		/* handle case with empty version string, for instance when importing from old files */
+		const validName = formats.find(f => f.name === name)?.name;
+		if (validName) {
+			const result = newestFormatNamed(formats, validName);
+			if (result) {
+				return result;
+			}
+		}
 	}
 
 	throw new Error(
