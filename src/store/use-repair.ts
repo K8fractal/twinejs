@@ -8,6 +8,10 @@ import {
 
 export interface UseRepairProps {
 	repairStories: () => void;
+	repairInvalidFormatWithNameAndVersion: (
+		formatName: string,
+		formatVersion: string
+	) => void;
 }
 
 export function useRepair(): UseRepairProps {
@@ -27,6 +31,21 @@ export function useRepair(): UseRepairProps {
 				allFormats: formats,
 				defaultFormat: defaultFormat
 			});
-		}, [dispatch, defaultFormat, formats])
+		}, [dispatch, defaultFormat, formats]),
+		repairInvalidFormatWithNameAndVersion: React.useCallback(
+			(formatName, formatVersion) => {
+				try {
+					formatWithNameAndVersion(formats, formatName, formatVersion);
+				} catch (error) {
+					console.log(error);
+					dispatch({
+						type: 'repair',
+						allFormats: formats,
+						defaultFormat: defaultFormat
+					});
+				}
+			},
+			[dispatch, defaultFormat, formats]
+		)
 	};
 }

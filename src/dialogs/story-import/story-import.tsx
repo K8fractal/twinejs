@@ -28,7 +28,7 @@ export const StoryImportDialog: React.FC<StoryImportDialogProps> = props => {
 
 	function handleImport(stories: Story[]) {
 		dispatch(importStories(stories, existingStories));
-		repairStories();
+		//		repairStories();
 		onClose();
 	}
 

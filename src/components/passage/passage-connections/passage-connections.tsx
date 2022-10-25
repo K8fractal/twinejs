@@ -5,6 +5,7 @@ import {PassageConnectionGroup} from './passage-connection-group';
 import {LinkMarkers} from './link-markers';
 import {StartConnection} from './start-connection';
 import {useFormatReferenceParser} from '../../../store/use-format-reference-parser';
+import {useRepair} from '../../../store/use-repair';
 
 export interface PassageConnectionsProps {
 	formatName: string;
@@ -19,18 +20,18 @@ const noOffset: Point = {left: 0, top: 0};
 
 export const PassageConnections: React.FC<PassageConnectionsProps> = props => {
 	const {formatName, formatVersion, offset, passages, startPassageId} = props;
+	const {repairInvalidFormatWithNameAndVersion} = useRepair();
+	repairInvalidFormatWithNameAndVersion(formatName, formatVersion);
 	const referenceParser = useFormatReferenceParser(formatName, formatVersion);
 	const {draggable: draggableLinks, fixed: fixedLinks} = React.useMemo(
 		() => passageConnections(passages),
 		[passages]
 	);
-	const {
-		draggable: draggableReferences,
-		fixed: fixedReferences
-	} = React.useMemo(() => passageConnections(passages, referenceParser), [
-		passages,
-		referenceParser
-	]);
+	const {draggable: draggableReferences, fixed: fixedReferences} =
+		React.useMemo(
+			() => passageConnections(passages, referenceParser),
+			[passages, referenceParser]
+		);
 
 	const startPassage = React.useMemo(
 		() => passages.find(passage => passage.id === startPassageId),
